@@ -1,15 +1,17 @@
 {
-  "name": "mock-server",
+  "name": "nmock-server",
   "version": "1.0.0",
-  "description": "A simple server for mockjs",
+  "description": "a simple koa server for mockjs",
   "license": "MIT",
   "main": "index.js",
   "bin": {
     "nmock-server": "./bin/nmock-server"
   },
-  "scripts": {},
+  "scripts": {
+  },
   "keywords": [
     "mock",
+    "mockjs",
     "server",
     "mock server"
   ],
