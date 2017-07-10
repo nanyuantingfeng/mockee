@@ -133,11 +133,4 @@ Temporary Items
 
 .gitignore
 .idea/
-LICENSE
-README.md
-bin/
-index.js
-mock/
-package.json
-src/
-node_modules/.bin/
+node_modules/**
