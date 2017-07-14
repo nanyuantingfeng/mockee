@@ -1,20 +1,25 @@
 /**************************************************
  * Created by nanyuantingfeng on 08/07/2017 12:57.
  **************************************************/
-const Server = require('./src/server')
-const router = require('./src/router')
+const chokidar = require('chokidar')
+const path = require('path')
+const {fork} = require('child_process')
 
-function MockServer (config) {
-  let {mock = 'mock', port = 3000, base = '/'} = config
+module.exports = function (config) {
+  let {mock, base, port} = config
+  let pCWD = process.cwd()
 
-  let server = new Server(port)
-  router.init(mock, base).then(data => {
-    server.start(data)
+  let forked = fork('./worker.js')
+  forked.send(config)
+
+  let watcher = chokidar.watch(path.join(pCWD, mock))
+
+  watcher.on('change', (event, path) => {
+    console.log('Mock Files Changed')
+    forked && forked.kill()
+    forked = fork('./worker.js')
+    forked.send(config)
   })
+
 }
-
-module.exports = MockServer
-
-
-
 

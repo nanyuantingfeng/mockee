@@ -1,10 +1,10 @@
 # nmock-server
-一个简易的Mock开发服务器
+一个Mock服务器
 
 ## 安装
 
 ```
-npm i nmock-server
+npm i nmock-server --save
 ```
 
 ## 如何使用

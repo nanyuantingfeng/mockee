@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-var program = require('commander')
+const program = require('commander')
 
 program
   .version('1.0.0')
@@ -9,8 +9,10 @@ program
   .option('-b, --base <s>', 'URL修正')
   .parse(process.argv)
 
-var MockServer = require('../index')
+let {mock, port, base} = program
 
-var {mock, port, base} = program
+mock = mock || 'mock'
+prot = port || 3000
 
-MockServer({mock, port, base})
+require('../index')({mock, port, base})
+
