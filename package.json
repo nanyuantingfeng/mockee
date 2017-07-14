@@ -1,6 +1,6 @@
 {
   "name": "nmock-server",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "a simple koa server for mockjs",
   "license": "MIT",
   "main": "index.js",
