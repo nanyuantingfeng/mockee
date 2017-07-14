@@ -9,7 +9,9 @@ module.exports = function (config) {
   let {mock, base, port} = config
   let pCWD = process.cwd()
 
-  let forked = fork(__dirname + '/worker.js')
+  let servicePath = path.join(__dirname, 'worker.js')
+
+  let forked = fork(servicePath)
   forked.send(config)
 
   let watcher = chokidar.watch(path.join(pCWD, mock))
@@ -17,7 +19,7 @@ module.exports = function (config) {
   watcher.on('change', (event, path) => {
     console.log('Mock Files Changed')
     forked && forked.kill()
-    forked = fork('./worker.js')
+    forked = fork(servicePath)
     forked.send(config)
   })
 
