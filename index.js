@@ -9,7 +9,7 @@ module.exports = function (config) {
   let {mock, base, port} = config
   let pCWD = process.cwd()
 
-  let forked = fork('./worker.js')
+  let forked = fork(__dirname + '/worker.js')
   forked.send(config)
 
   let watcher = chokidar.watch(path.join(pCWD, mock))
