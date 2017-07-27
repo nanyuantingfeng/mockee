@@ -26,14 +26,16 @@ exports.init = function (mock, base) {
 
       data.forEach(line => {
         let p = parseRoutesPath(mock, base, line)
-        router.get(p, (ctx, next) => {
+        let fn = (ctx, next) => {
           let file = require(path.join(pCWD, line))
           if (typeof file === 'function') {
             ctx.body = file(Mock)
           } else {
             ctx.body = Mock.mock(file)
           }
-        })
+        }
+        router.get(p, fn)
+        router.post(p,fn)
       })
 
       return router
