@@ -1,27 +1,28 @@
 /**************************************************
- * Created by nanyuantingfeng on 08/07/2017 12:57.
+ * Created by nanyuantingfeng on 28/03/2018 19:29.
  **************************************************/
-const chokidar = require('chokidar')
+const child_process = require('child_process')
 const path = require('path')
-const {fork} = require('child_process')
+const chokidar = require('chokidar')
+const chalk = require('chalk')
+const logo = require('./src/logo')
 
-module.exports = function (config) {
-  let {mock, base, port} = config
-  let pCWD = process.cwd()
+module.exports = function (mock, port, iswatch) {
+  mock = path.join(process.cwd(), mock)
 
-  let servicePath = path.join(__dirname, 'worker.js')
+  logo()
 
-  let forked = fork(servicePath)
-  forked.send(config)
+  const worker = path.join(__dirname, 'index.worker.js')
+  let forked = child_process.fork(worker)
+  forked.send({mock, port})
 
-  let watcher = chokidar.watch(path.join(pCWD, mock))
-
-  watcher.on('change', (event, path) => {
-    console.log('Mock Files Changed')
-    forked && forked.kill()
-    forked = fork(servicePath)
-    forked.send(config)
-  })
+  if (iswatch) {
+    chokidar.watch(mock).on('change', path => {
+      console.log(chalk.red(' mock path files is modified, server restarting ...\n\n'))
+      forked && forked.kill()
+      forked = child_process.fork(worker)
+      forked.send({mock, port})
+    })
+  }
 
 }
-
