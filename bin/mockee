@@ -1,0 +1,14 @@
+#!/usr/bin/env node
+
+var program = require('commander')
+
+program
+  .version(require('../package').version)
+  .option('-p, --port <n>', 'port', s => parseInt(s, 10), 3000)
+  .option('-m, --mock <s>', 'mock path', 'mock')
+  .option('-w, --watch', 'is watch mock path', false)
+  .parse(process.argv)
+
+var start = require('../index')
+
+start(program.mock, program.port, program.watch)
