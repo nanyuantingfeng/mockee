@@ -1,12 +1,11 @@
 {
   "name": "mockee",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "bin": {
     "mockee": "./bin/mockee"
   },
   "dependencies": {
     "chalk": "^2.3.2",
-    "chokidar": "^2.0.3",
     "commander": "^2.15.1",
     "detect-port": "^1.2.2",
     "figlet": "^1.2.0",

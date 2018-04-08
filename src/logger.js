@@ -6,4 +6,5 @@ module.exports = async function (ctx, next) {
   await next()
   const ms = new Date() - start
   console.log('%s %s - %sms --', ctx.method, ctx.url, ms)
+  ctx.set('X-Response-Time', ms + 'ms')
 }

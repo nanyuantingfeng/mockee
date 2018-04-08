@@ -2,7 +2,6 @@
  * Created by nanyuantingfeng on 13/03/2018 20:07.
  **************************************************/
 const path = require('path')
-const koaRoute = require('koa-route')
 const helpers = require('./helpers')
 
 const {
@@ -11,7 +10,7 @@ const {
 } = helpers
 
 module.exports = async function (mock) {
-  const routes = []
+  const routeURLs = []
   const files = await globPath(path.join(mock, '**/*.*'))
 
   let i = -1
@@ -20,26 +19,14 @@ module.exports = async function (mock) {
     const rp = replacePath(mock, line)
 
     if (isJSONFile(line)) {
-
-      routes.push(koaRoute.get(`${rp}.json`, async (ctx) => ctx.body = require(line)))
-      routes.push(koaRoute.all(rp, async (ctx) => ctx.body = require(line)))
-
+      routeURLs.push(`${rp}.json`)
+      routeURLs.push(rp)
     } else if (isTextFile(line)) {
-
-      routes.push(koaRoute.get(rp, async (ctx) => ctx.body = readFileAsText(line)))
-
+      routeURLs.push(rp)
     } else {
-
-      routes.push(koaRoute.all(rp,
-        async (ctx, ...args) => {
-          const ff = require(line)
-          ctx.body = isFunction(ff) ? await ff(ctx, ...args) : ff
-        }
-      ))
-
+      routeURLs.push(rp)
     }
-
   }
 
-  return routes
+  return routeURLs
 }

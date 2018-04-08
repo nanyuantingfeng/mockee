@@ -6,6 +6,6 @@ const chalk = require('chalk')
 const figlet = util.promisify(require('figlet'))
 
 module.exports = async function () {
-  const logo = await figlet('Mock Server')
+  const logo = await figlet('mockee')
   console.log(chalk.green(logo))
 }

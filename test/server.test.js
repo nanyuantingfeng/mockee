@@ -2,24 +2,27 @@
  * Created by nanyuantingfeng on 13/03/2018 18:59.
  **************************************************/
 const path = require('path')
-const server = require('../src/server')
+const Koa = require('koa')
 const supertest = require('supertest')
-
-const port = 3000
-const mock = path.join(__dirname, 'mock')
 
 let app
 let request
 let service
 
+const mockee = require('../src/mockee')
+
 beforeAll(async () => {
-  app = await server(mock, port)
-  service = app.listen()
+  const port = 3000
+  const mock = path.join(__dirname, 'mock')
+
+  app = new Koa()
+  await mockee(app, mock)
+  service = app.listen(port)
   request = supertest(service)
 })
 
 afterEach(async () => {
-  service && service.close()
+  service.close()
 })
 
 test('/', async (done) => {
