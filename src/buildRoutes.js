@@ -1,18 +1,17 @@
 /**************************************************
  * Created by nanyuantingfeng on 13/03/2018 20:07.
  **************************************************/
-const path = require('path')
 const koaRoute = require('koa-route')
 const helpers = require('./helpers')
 
 const {
-  globPath, isFunction, isJSONFile,
-  isTextFile, readFileAsText, replacePath
+  globMock, isFunction, isJSONFile, isTextFile,
+  replacePath, asJSON, asFunc, asText,
 } = helpers
 
 module.exports = async function (mock) {
   const routes = []
-  const files = await globPath(path.join(mock, '**/*.*'))
+  const files = await globMock(mock)
 
   let i = -1
   while (++i < files.length) {
@@ -20,25 +19,17 @@ module.exports = async function (mock) {
     const rp = replacePath(mock, line)
 
     if (isJSONFile(line)) {
-
-      routes.push(koaRoute.get(`${rp}.json`, async (ctx) => ctx.body = require(line)))
-      routes.push(koaRoute.all(rp, async (ctx) => ctx.body = require(line)))
-
-    } else if (isTextFile(line)) {
-
-      routes.push(koaRoute.get(rp, async (ctx) => ctx.body = readFileAsText(line)))
-
-    } else {
-
-      routes.push(koaRoute.all(rp,
-        async (ctx, ...args) => {
-          const ff = require(line)
-          ctx.body = isFunction(ff) ? await ff(ctx, ...args) : ff
-        }
-      ))
-
+      routes.push(koaRoute.get(`${rp}.json`, asJSON(line)))
+      routes.push(koaRoute.all(rp, asJSON(line)))
+      continue
     }
 
+    if (isTextFile(line)) {
+      routes.push(koaRoute.get(rp, asText(line)))
+      continue
+    }
+
+    routes.push(koaRoute.all(rp, asFunc(line)))
   }
 
   return routes

@@ -1,17 +1,16 @@
 /**************************************************
  * Created by nanyuantingfeng on 13/03/2018 20:07.
  **************************************************/
-const path = require('path')
 const helpers = require('./helpers')
 
 const {
-  globPath, isFunction, isJSONFile,
+  globMock, isFunction, isJSONFile,
   isTextFile, readFileAsText, replacePath
 } = helpers
 
 module.exports = async function (mock) {
   const routeURLs = []
-  const files = await globPath(path.join(mock, '**/*.*'))
+  const files = await globMock(mock)
 
   let i = -1
   while (++i < files.length) {
@@ -21,11 +20,17 @@ module.exports = async function (mock) {
     if (isJSONFile(line)) {
       routeURLs.push(`${rp}.json`)
       routeURLs.push(rp)
-    } else if (isTextFile(line)) {
-      routeURLs.push(rp)
-    } else {
-      routeURLs.push(rp)
+
+      continue
     }
+
+    if (isTextFile(line)) {
+      routeURLs.push(rp)
+
+      continue
+    }
+
+    routeURLs.push(rp)
   }
 
   return routeURLs

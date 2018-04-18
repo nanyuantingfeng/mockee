@@ -7,6 +7,7 @@ const util = require('util')
 const detect = util.promisify(require('detect-port'))
 const Koa = require('koa')
 
+const logger = require('./logger')
 const mockee = require('./mockee')
 const buildURLs = require('./buildURLs')
 
@@ -31,8 +32,10 @@ module.exports = async function (mock, port) {
 
   console.log('\n\n')
 
-  const app = await mockee(new Koa(), mock)
+  const app = new Koa()
 
+  app.use(logger)
+  app.use(await mockee(mock))
   app.listen($port)
 
   return app

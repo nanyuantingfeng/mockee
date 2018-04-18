@@ -9,14 +9,14 @@ let app
 let request
 let service
 
-const mockee = require('../src/mockee')
+const mockee = require('../mockee')
 
 beforeAll(async () => {
   const port = 3000
   const mock = path.join(__dirname, 'mock')
 
   app = new Koa()
-  await mockee(app, mock)
+  app.use(await mockee(mock))
   service = app.listen(port)
   request = supertest(service)
 })
